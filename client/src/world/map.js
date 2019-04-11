@@ -9,6 +9,7 @@ export default (options) => ({
     width: 8,
     height: 8,
     tiles: [[]],
+    x: 10,
     generate(w, h) {
         this.width = w
         this.height = h
@@ -64,13 +65,13 @@ export default (options) => ({
         }
     },
     drawTile(x, y, cx, cy) {
-        const source = [1, 4]
+        //const source = [1, 4]
         const tilemaps = {
             '3': () => this.getBitmaskedTile(this.tilesets.floor, x, y),
             'default': () => this.getBitmaskedTile(this.tilesets.wall, x, y),
         }
         const tile = this.getTile(x, y)
-        const { offX, offY, texture } = tilemaps[tile] && tilemaps[tile]() || tilemaps.default()
+        const { offX, offY, texture, source } = tilemaps[tile] && tilemaps[tile]() || tilemaps.default()
         this.canvas.drawImage(
             texture,
             (source[0] + offX) * this.tileWidth,
