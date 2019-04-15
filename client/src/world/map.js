@@ -1,5 +1,6 @@
 export default (options) => ({
     canvas: null,
+    tilecanvas: null,
     tilesets: {
         wall: null,
         floor: null,
@@ -18,7 +19,7 @@ export default (options) => ({
     mapTiles(mapFunction) {
         return Array.from(Array(this.width)).map((value, x) =>
             Array.from(Array(this.height)).map((value, y) =>
-                mapFunction(x + 1, y + 1)
+                mapFunction(x, y)
             )
         )
     },
@@ -72,20 +73,33 @@ export default (options) => ({
         }
         const tile = this.getTile(x, y)
         const { offX, offY, texture, source } = tilemaps[tile] && tilemaps[tile]() || tilemaps.default()
-        this.canvas.drawImage(
+        this.tilecanvas.drawImage(
             texture,
             (source[0] + offX) * this.tileWidth,
             (source[1] + offY) * this.tileWidth,
             this.tileWidth,
             this.tileWidth,
-            (x * this.tileWidth - cx) * this.scale,
-            (y * this.tileWidth - cy) * this.scale,
-            this.tileWidth * this.scale,
-            this.tileWidth * this.scale
+            (x * this.tileWidth),
+            (y * this.tileWidth),
+            this.tileWidth,
+            this.tileWidth
         )
     },
-    drawTiles(cx, cy) {
-        this.mapTiles((x, y) => this.drawTile(x, y, cx, cy))
+    drawTiles() {
+        this.mapTiles((x, y) => this.drawTile(x, y))
+    },
+    drawTilemap(cx, cy) {
+        this.canvas.drawImage(
+            this.tilecanvas.canvas,
+            cx,
+            cy,
+            window.innerWidth/this.scale,
+            window.innerHeight/this.scale,
+            0,
+            0,
+            window.innerWidth,
+            window.innerHeight
+        )
     },
     ...options,
 })

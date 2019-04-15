@@ -1,5 +1,6 @@
 <template>
     <div id="app">
+        <canvas ref="tilecanvas" style="display:none"></canvas>
         <canvas ref="canvas"></canvas>
         <GlobalEvents
             @keydown.up="move('up')"
@@ -36,15 +37,21 @@ export default {
     },
     async mounted() {
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
-        const { canvas } = this.$refs
+        const { tilecanvas, canvas } = this.$refs
         canvas.width = window.innerWidth
         canvas.height = window.innerHeight
         // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
         const c = canvas.getContext('2d')
         c.imageSmoothingEnabled = false
+        
+        tilecanvas.width = 16 * 40
+        tilecanvas.height = 16 * 40
+        const tc = tilecanvas.getContext('2d')
+        tc.imageSmoothingEnabled = false
 
         this.map = map({
             canvas: c,
+            tilecanvas: tc,
             tilesets: {
                 wall: await tileset({
                     offX: 0,
@@ -64,10 +71,11 @@ export default {
         })
 
         this.map.generate(40,40)
-
+        this.map.drawTiles()
+        
         const animate = () => {
             requestAnimationFrame(animate);
-            this.map.drawTiles(this.cx, this.cy)
+            this.map.drawTilemap(this.cx, this.cy)
         }
 
         animate()
@@ -83,5 +91,8 @@ export default {
 
     canvas {
         display: block;
+        position: absolute;
+        top: 0;
+        left: 0
     }
 </style>
