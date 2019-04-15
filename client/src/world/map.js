@@ -85,7 +85,12 @@ export default (options) => ({
         )
     },
     drawTiles(cx, cy) {
-        this.mapTiles((x, y) => this.drawTile(x, y, cx, cy))
+        //this.mapTiles((x, y) => this.drawTile(x, y, cx, cy))
+        for (var x = Math.max(Math.floor(cx/this.tileWidth),0); x < Math.ceil((cx + window.innerWidth)/this.tileWidth); x++) {
+            for (var y = Math.max(Math.floor(cy/this.tileWidth),0); y < Math.ceil((cy + window.innerHeight)/this.tileWidth); y++) {
+                this.drawTile(x,y,cx,cy)
+            }
+        }
     },
     ...options,
 })
