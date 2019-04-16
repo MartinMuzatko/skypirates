@@ -1,21 +1,43 @@
-import http from 'http'
-import socketIO from 'socket.io'
-import express from 'express'
-import expressSession from 'express-session'
-import sharedSession from 'express-socket.io-session'
+import server from './server'
 import World from './classes/world'
 import Player from './classes/entities/player'
+import EntityEvent from './classes/entityEvent'
 
-const PORT = process.env.PORT || 3000
+const {io, api} = server()
 
-const app = express()
+api.get('/world', (req, res) => {
+    console.log(req.session.player)
+    res.send(world)
+})
 
-const server = http.createServer(app)
-const io = socketIO(server)
+api.post('/join', (req, res) => {
+    if (req.session.player) return res.status(412).end()
+    const player = newPlayer()
+    req.session.player = player.id
+    req.session.save()
+    console.log(req.session)
+    res.send(player)
+})
 
-const world = new World(30, 30)
+io.on('connection', socket => {
+    socket.on('move', direction => {
+        movePlayer(socket.handshake.session.player, direction)
+    })
+    socket.on('connect', data => {
+        // console.log('connect from', data)
+    })
+    socket.on('disconnect', () => { })
+})
 
-const api = express.Router()
+
+const world = new World(10, 10)
+
+console.log(world.tiles)
+
+const x = newPlayer()
+setInterval(() => {
+    movePlayer(x.id, ['UP', 'RIGHT'][Math.random() * 2 | 0])
+}, 100)
 
 function newPlayer() {
     const player = new Player()
@@ -23,50 +45,7 @@ function newPlayer() {
     return player
 }
 
-
-const session = expressSession({
-    secret: 'my-secret',
-    resave: true,
-    saveUninitialized: true,
-})
-
-app.use(session)
-io.use(sharedSession(session, {
-    autoSave: true,
-}))
-
-
-app.use(express.json())
-app.use('/api', api)
-
-api.get('/world', (req, res) => {
-    console.log(req.session.cookie)
-    req.session.test = 333
-    req.session.save()
-    res.send(world)
-})
-
-api.post('/join', (req, res) => {
-    const player = newPlayer()
-    req.session.cookie.player = player.id
-    req.session.save()
-    console.log(req.session.cookie)
-    res.send(player)
-
-})
-
-io.on('connection', socket => {
-    socket.on('move', data => {
-        console.log(socket.handshake.session.cookie)
-        // world.entities[0] =
-    })
-    socket.on('connect', data => {
-        // console.log('connect from', data)
-    })
-    socket.on('disconnect', () => {
-
-    })
-});
-server.listen(PORT)
-
-console.log(`listening to ${PORT}`)
+function movePlayer(id, direction) {
+    const player = world.entities.find(entity => entity.id == id)
+    player.tick(() => player.triggers.move(new EntityEvent(world, id, {direction})))
+}

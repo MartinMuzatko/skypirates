@@ -9,6 +9,11 @@ export default class Entity {
         Object.assign(this, options)
         this.triggers = bindObject(this.triggers, this)
         this.hooks = bindObject(this.hooks, this)
+        this.nextTick = null
+    }
+
+    tick(method) {
+        this.nextTick = method
     }
 }
 

@@ -10,11 +10,10 @@ export default class EntityPlayer extends Entity {
             },
             triggers: {
                 move(event) {
+                    if (!DIRECTIONS.includes(event.direction)) return
                     this.attributes.direction = event.direction
+                    if (!event.canMove) return
                     this.attributes.position = moveDirectional(this)
-                },
-                touch(event) {
-                    this.attributes.position.x += 1
                 },
             },
             hooks: {
@@ -26,6 +25,13 @@ export default class EntityPlayer extends Entity {
         })
     }
 }
+
+const DIRECTIONS = [
+    'UP',
+    'DOWN',
+    'RIGHT',
+    'LEFT',
+]
 
 function moveDirectional(movingObject) {
     const vectorMap = {

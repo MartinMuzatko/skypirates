@@ -18,7 +18,11 @@ export function loopTimer(loop = {}) {
         next() {
             this.timer = setTimeout(async () => {
                 this.tick += 1
-                typeof this.operation == 'function' && await this.operation(this)
+                try {
+                    typeof this.operation == 'function' && await this.operation(this)
+                } catch (error) {
+                    console.error(error)
+                }
                 if (!this.stopNextCycle) this.next()
             }, this.timeout)
         },
