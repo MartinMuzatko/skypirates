@@ -70,9 +70,17 @@ export default {
             tileWidth: 16,
         })
 
-        this.map.generate(40,40)
+        try {
+            await this.$api.join()
+            const { tiles, entities } = await this.$api.getWorld()
+            this.map.tiles = tiles
+        } catch(error) {
+            // no server connection, generating our own world
+            this.map.generate(30, 30)
+        }
+
         this.map.drawTiles()
-        
+
         const animate = () => {
             requestAnimationFrame(animate);
             this.map.drawTilemap(this.cx, this.cy)
