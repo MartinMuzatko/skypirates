@@ -96,35 +96,36 @@ export default (options) => ({
         )
     },
     getAnimatedEntity(entity) {
+        var tileset = this.entityTilesets[0]
         return {
             ...tileset,
-            source: entityTilesets[entity.attributes.type].tiles[this.frame]
+            source: this.entityTilesets[0].tiles[this.frame]
         }
     },
     drawEntity(entity,cx, cy) {
-        const { offX, offY, texture, source } = this.getAnimatedTile(this.tilesets[this.getTile(x, y)])
+        const { offX, offY, texture, source } = this.getAnimatedEntity(entity)
         this.canvas.drawImage(
             texture,
-            (source[0] + offX) * this.tileWidth,
-            (source[1] + offY) * this.tileWidth,
+            (source[0] + offX) * entity.attributes.dimensions.w,
+            (source[1] + offY) * entity.attributes.dimensions.h,
             this.tileWidth,
             this.tileWidth,
-            (x * entity.attributes.position.x) - cx,
-            (y * entity.attributes.position.y) - cy,
-            this.tileWidth,
-            this.tileWidth
+            ((this.tileWidth * entity.attributes.position.x) - cx - (this.tileWidth-entity.attributes.dimensions.w))*this.scale,
+            ((this.tileWidth * entity.attributes.position.y) - cy - (this.tileWidth-entity.attributes.dimensions.h) - entity.attributes.dimensions.d)*this.scale,
+            this.tileWidth*this.scale,
+            this.tileWidth*this.scale
         )
     },
-    drawEntities (cx, cy) {/*
+    drawEntities (cx, cy) {
         for (var y = 0; y < this.height; y++) {
             for (var curLayer = 0; curLayer < 5; curLayer++) {
                 for (var i = 0; i < this.entities.length; i++) {                    
                     if (this.entities[i].attributes.position.y == y) {
-                        drawEntity(this.entities[i],cx,cy)
+                        this.drawEntity(this.entities[i],cx,cy)
                     }
                 }
             }
-        }*/
+        }
     },
     ...options,
 })

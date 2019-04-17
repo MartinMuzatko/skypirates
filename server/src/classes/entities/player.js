@@ -7,6 +7,8 @@ export default class EntityPlayer extends Entity {
             attributes: {
                 position: { x: 0, y: 0 },
                 direction: 'UP',
+                tileset: 0,
+                dimensions: {w: 16, h: 16, d: 2},
             },
             triggers: {
                 move(event) {

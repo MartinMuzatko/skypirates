@@ -16,6 +16,7 @@ import GlobalEvents from 'vue-global-events'
 import map from './world/map'
 import tileset from './world/tileset'
 import Entity  from '../../server/src/classes/entity'
+import EntityPlayer from '../../server/src/classes/entities/player'
 
 export default {
     name: 'app',
@@ -91,13 +92,14 @@ export default {
         }
         
         // Get entities here
-        this.map.entities = [new Entity({attributes: {position: {x: 4, y: 9}}})]
+        this.map.entities = [new EntityPlayer () ]
+        this.map.entities[0].attributes.position = {x: 6, y: 4}
         this.map.drawTiles()
                 
         const animate = () => {
             requestAnimationFrame(animate);
             this.map.drawTilemap(this.cx, this.cy)
-            //this.map.drawEntities(this.cx,this.cy)
+            this.map.drawEntities(this.cx,this.cy)
         }
         const animateFrames = () => {
             if (this.map.frame == 0) {
