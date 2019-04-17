@@ -1,10 +1,7 @@
 export default (options) => ({
     canvas: null,
     tilecanvas: null,
-    tilesets: {
-        wall: null,
-        floor: null,
-    },
+    tilesets: [],
     tileWidth: 16,
     scale: 4,
     width: 8,
@@ -14,7 +11,7 @@ export default (options) => ({
     generate(w, h) {
         this.width = w
         this.height = h
-        this.tiles = this.mapTiles(() => Math.random() < .5 ? 3 : 1)
+        this.tiles = this.mapTiles(() => Math.random() < .5 ? 0 : 1)
     },
     mapTiles(mapFunction) {
         return Array.from(Array(this.width)).map((value, x) =>
@@ -65,14 +62,8 @@ export default (options) => ({
             source: tileset.tiles[this.bitmask4(x, y, 1, true)]
         }
     },
-    drawTile(x, y, cx, cy) {
-        //const source = [1, 4]
-        const tilemaps = {
-            '3': () => this.getBitmaskedTile(this.tilesets.floor, x, y),
-            'default': () => this.getBitmaskedTile(this.tilesets.wall, x, y),
-        }
-        const tile = this.getTile(x, y)
-        const { offX, offY, texture, source } = tilemaps[tile] && tilemaps[tile]() || tilemaps.default()
+    drawTile(x, y) {
+        const { offX, offY, texture, source } = this.getBitmaskedTile(this.tilesets[this.getTile(x, y)], x, y)
         this.tilecanvas.drawImage(
             texture,
             (source[0] + offX) * this.tileWidth,
