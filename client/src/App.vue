@@ -15,6 +15,7 @@
 import GlobalEvents from 'vue-global-events'
 import map from './world/map'
 import tileset from './world/tileset'
+import Entity  from '../../server/src/classes/entity'
 
 export default {
     name: 'app',
@@ -56,17 +57,25 @@ export default {
                 await tileset({
                     offX: 0,
                     offY: 3,
-                    file: require('./assets/Wall.png'),
+                    file: require('./assets/tiles/Wall.png'),
                     tiles: [[1,1],[1,1],[2,2],[2,2],[0,2],[0,2],[1,0],[4,2],[0,1],[0,1],[2,0],[5,1],[0,0],[3,1],[4,0],[4,1]],
                     bitmaskEqual: true,
                 }),
                 await tileset({
                     offX: 0,
                     offY: 3,
-                    file: require('./assets/Floor.png'),
+                    file: require('./assets/tiles/Floor.png'),
                     tiles: [[1,1],[1,0],[0,1],[0,0],[2,1],[2,0],[3,1],[3,0],[1,2],[5,1],[0,2],[4,1],[2,2],[6,1],[3,2],[4,1]],
                     bitmaskEqual: false,
                 })
+            ],
+            entityTilesets: [
+                await tileset({
+                    offX: 0,
+                    offY: 0,
+                    file: require('./assets/mobs/GoblinDude.png'),
+                    tiles: [[0,0],[1,0]],
+                }),
             ],
             scale: 4,
             tileWidth: 16,
@@ -80,14 +89,25 @@ export default {
             // no server connection, generating our own world
             this.map.generate(30, 30)
         }
-
+        
+        // Get entities here
+        this.map.entities = [new Entity({attributes: {position: {x: 4, y: 9}}})]
         this.map.drawTiles()
-
+                
         const animate = () => {
             requestAnimationFrame(animate);
             this.map.drawTilemap(this.cx, this.cy)
+            //this.map.drawEntities(this.cx,this.cy)
         }
-
+        const animateFrames = () => {
+            if (this.map.frame == 0) {
+                this.map.frame = 1
+            } else {
+                this.map.frame = 0
+            }
+        }
+        
+        setInterval(animateFrames, 500);
         animate()
     }
 }

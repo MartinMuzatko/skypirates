@@ -2,11 +2,14 @@ export default (options) => ({
     canvas: null,
     tilecanvas: null,
     tilesets: [],
+    entityTilesets: [],
     tileWidth: 16,
     scale: 4,
     width: 8,
     height: 8,
     tiles: [[]],
+    entities: [],
+    frame: 0,
     x: 10,
     generate(w, h) {
         this.width = w
@@ -91,6 +94,37 @@ export default (options) => ({
             window.innerWidth,
             window.innerHeight
         )
+    },
+    getAnimatedEntity(entity) {
+        return {
+            ...tileset,
+            source: entityTilesets[entity.attributes.type].tiles[this.frame]
+        }
+    },
+    drawEntity(entity,cx, cy) {
+        const { offX, offY, texture, source } = this.getAnimatedTile(this.tilesets[this.getTile(x, y)])
+        this.canvas.drawImage(
+            texture,
+            (source[0] + offX) * this.tileWidth,
+            (source[1] + offY) * this.tileWidth,
+            this.tileWidth,
+            this.tileWidth,
+            (x * entity.attributes.position.x) - cx,
+            (y * entity.attributes.position.y) - cy,
+            this.tileWidth,
+            this.tileWidth
+        )
+    },
+    drawEntities (cx, cy) {/*
+        for (var y = 0; y < this.height; y++) {
+            for (var curLayer = 0; curLayer < 5; curLayer++) {
+                for (var i = 0; i < this.entities.length; i++) {                    
+                    if (this.entities[i].attributes.position.y == y) {
+                        drawEntity(this.entities[i],cx,cy)
+                    }
+                }
+            }
+        }*/
     },
     ...options,
 })

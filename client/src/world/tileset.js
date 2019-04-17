@@ -12,8 +12,6 @@ export default async function(options) {
     if (!options.file) throw new Error('Texture is required for Tileset')
     const texture = await loadImage(options.file)
     return {
-        offX: 0,
-        offY: 0,
         tiles: [],
         ...options,
         texture,
