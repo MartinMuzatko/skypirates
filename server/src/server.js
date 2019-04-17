@@ -3,6 +3,7 @@ import socketIO from 'socket.io'
 import express from 'express'
 import expressSession from 'express-session'
 import sharedSession from 'express-socket.io-session'
+import cors from 'cors'
 
 const COOKIE_SECRET = 'asojduia9sh7847'
 
@@ -19,6 +20,7 @@ export default function (settings = {}) {
     }
 
     const app = express()
+    app.use(cors())
     const server = http.createServer(app)
     const io = socketIO(server)
     const session = expressSession(settings.session)

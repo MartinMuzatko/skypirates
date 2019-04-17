@@ -46,6 +46,7 @@ export default class World {
 
     toJSON() {
         return {
+            tiles: this.tiles,
             entities: this.entities
         }
     }
