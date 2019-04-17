@@ -56,14 +56,14 @@ export default (options) => ({
         }
         return value
     },
-    getBitmaskedTile(tileset, x, y) {
+    getBitmaskedTile(tileset, type, x, y) {
         return {
             ...tileset,
-            source: tileset.tiles[this.bitmask4(x, y, 1, true)]
+            source: tileset.tiles[this.bitmask4(x, y, type, tileset.bitmaskEqual)]
         }
     },
     drawTile(x, y) {
-        const { offX, offY, texture, source } = this.getBitmaskedTile(this.tilesets[this.getTile(x, y)], x, y)
+        const { offX, offY, texture, source } = this.getBitmaskedTile(this.tilesets[this.getTile(x, y)], this.getTile(x,y),x, y)
         this.tilecanvas.drawImage(
             texture,
             (source[0] + offX) * this.tileWidth,
