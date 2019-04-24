@@ -87,8 +87,8 @@ export default (options) => ({
             this.tilecanvas.canvas,
             cx,
             cy,
-            window.innerWidth/this.scale,
-            window.innerHeight/this.scale,
+            window.innerWidth / this.scale,
+            window.innerHeight / this.scale,
             0,
             0,
             window.innerWidth,
@@ -102,7 +102,7 @@ export default (options) => ({
             source: this.entityTilesets[0].tiles[this.frame]
         }
     },
-    drawEntity(entity,cx, cy) {
+    drawEntity(entity, cx, cy) {
         const { offX, offY, texture, source } = this.getAnimatedEntity(entity)
         this.canvas.drawImage(
             texture,

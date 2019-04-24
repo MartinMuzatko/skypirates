@@ -3,10 +3,10 @@
         <canvas ref="tilecanvas" style="display:none"></canvas>
         <canvas ref="canvas"></canvas>
         <GlobalEvents
-            @keydown.up="move('up')"
-            @keydown.down="move('down')"
-            @keydown.right="move('right')"
-            @keydown.left="move('left')"
+            @keydown.up="move('UP')"
+            @keydown.down="move('DOWN')"
+            @keydown.right="move('RIGHT')"
+            @keydown.left="move('LEFT')"
         />
     </div>
 </template>
@@ -29,12 +29,13 @@ export default {
     methods: {
         move(direction) {
             const moves = {
-                up: (state) => state.cy -= 1,
-                down: (state) => state.cy += 1,
-                left: (state) => state.cx -= 1,
-                right: (state) => state.cx += 1,
+                UP: (state) => state.cy -= 1,
+                DOWN: (state) => state.cy += 1,
+                LEFT: (state) => state.cx -= 1,
+                RIGHT: (state) => state.cx += 1,
             }
-            moves[direction](this)
+            moves[direction] && moves[direction](this) && this.$api.move(direction)
+
         }
     },
     async mounted() {
