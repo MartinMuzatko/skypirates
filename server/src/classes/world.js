@@ -21,6 +21,15 @@ export default class World {
         this.entities = entities
     }
 
+    getEntity(id) {
+        return this.entities.find(entity => entity.id == id)
+    }
+
+    removeEntity(id) {
+        const index = this.entities.findIndex(entity => entity.id == id)
+        return ~index && this.entities.splice(index, 1)
+    }
+
     getTile(x, y) {
         const map = this.tiles.reverse()
         const coordinate = map[y] && map[y][x]

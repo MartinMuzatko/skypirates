@@ -1,14 +1,15 @@
 import Entity from '../entity'
 
 export default class EntityPlayer extends Entity {
-    constructor(player) {
+    constructor(player = {}) {
         super({
             name: 'player',
             attributes: {
                 position: { x: 0, y: 0 },
                 direction: 'UP',
                 tileset: 0,
-                dimensions: {w: 16, h: 16, d: 2},
+                dimensions: { w: 16, h: 16, d: 2 },
+                ...player.attributes,
             },
             triggers: {
                 move(event) {
@@ -17,13 +18,14 @@ export default class EntityPlayer extends Entity {
                     if (!event.canMove) return
                     this.attributes.position = moveDirectional(this)
                 },
+                ...player.triggers,
             },
             hooks: {
                 destroyed(event) {}, // fired when removed from the world
                 created(event) {}, // fired when set into world
                 updated(event) {}, // fired when moved
+                ...player.hooks,
             },
-            ...player
         })
     }
 }
