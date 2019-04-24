@@ -32,7 +32,7 @@ export default function (settings = {}) {
         sharedSession(session, {
             autoSave: true,
         })
-        )
+    )
 
     const api = express.Router()
     app.use('/api', api)

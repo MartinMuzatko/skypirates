@@ -40,12 +40,17 @@ setInterval(() => {
 }, 100)
 
 function newPlayer() {
-    const player = new Player()
+    const player = new Player({
+        attributes: {
+            position: { x: (Math.random() * world.width) | 0, y: (Math.random() * world.height) | 0 },
+        },
+    })
     world.entities.push(player)
     return player
 }
 
 function movePlayer(id, direction) {
-    const player = world.entities.find(entity => entity.id == id)
+    const player = world.getEntity(id)
+    if (!player) return
     player.tick(() => player.triggers.move(new EntityEvent(world, id, {direction})))
 }
